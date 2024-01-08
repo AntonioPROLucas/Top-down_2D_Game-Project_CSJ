@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D rig;
     private Vector2 _direction;
     private bool _isRunning;
+    private bool _isRolling;
 
     public Vector2 direction
     {
@@ -22,7 +23,11 @@ public class Player : MonoBehaviour
         get {return _isRunning;}
         set {_isRunning = value;}
     }
-
+    public bool isRolling
+    {
+        get {return _isRolling;}
+        set {_isRolling = value;}
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -35,8 +40,8 @@ public class Player : MonoBehaviour
     private void Update()
     {
        OnInput();
-
        OnRun();
+       OnRolling();
     }
 
     private void FixedUpdate()
@@ -67,6 +72,20 @@ public class Player : MonoBehaviour
         {
             speed = initialSpeed;
             _isRunning = false;
+        }
+    }
+    
+    void OnRolling()
+    {
+        if(Input.GetMouseButtonDown(1)||Input.GetKeyDown(KeyCode.Space))
+        {
+            isRolling = true;
+            speed = runSpeed;
+        }
+        if(Input.GetMouseButtonUp(1)||Input.GetKeyUp(KeyCode.Space))
+        {
+            isRolling = false;
+            speed = initialSpeed;
         }
     }
 
