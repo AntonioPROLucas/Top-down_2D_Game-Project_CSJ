@@ -2,23 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DialogueControl : MonoBehaviour
 {
+    [System.Serializable]
+    public enum idiom
+    {
+        pt,
+        eng,
+        spa
+    }
+    public idiom language;
+
+
     [Header("Components")]
-    public GameObject dialogueObj; //janela de diálogo
-    public Image profileSprite;   //sprite do perfil
-    public Text  speechText;     //texto da fala
-    public Text actorNameText;  //nome do npc
+    public GameObject dialogueObj;               //janela de diálogo
+    public Image profileSprite;                  //sprite do perfil
+    public TextMeshProUGUI speechText;           //texto da fala
+    public TextMeshProUGUI actorNameText;        //nome do npc
 
     [Header("Settings")]
     public float typingSpeed;  //velocidade da fala
-
+    public Animator anim;
 
     //Variaveis de controle
-    private bool isShowing; //se a janela está visivel 
-    private int index;     //index das sentenças
+    [HideInInspector]public bool isShowing; //se a janela está visivel 
+    public int index;     //index das sentenças
     private string[] sentences;
+
+    public static DialogueControl instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -37,11 +55,31 @@ public class DialogueControl : MonoBehaviour
             speechText.text += letter;
             yield return new  WaitForSeconds(typingSpeed);
         }
+        OnSentenceComplete();
     }
+    
 
     //pular pra próxima frase/fala
     public void NextSentence()
     {
+        if(speechText.text == sentences[index])
+        {
+            if(index < sentences.Length - 1)
+            {
+                index++;
+                speechText.text = "";
+                anim.SetInteger("transition", 1);
+                StartCoroutine(TypeSentence());
+            }
+            else//quando terminam o texto
+            {
+                speechText.text = "";
+                index = 0;
+                dialogueObj.SetActive(false);
+                sentences = null;
+                isShowing = false;
+            }
+        }
 
     }
 
@@ -54,6 +92,16 @@ public class DialogueControl : MonoBehaviour
             sentences = txt;
             StartCoroutine(TypeSentence());
             isShowing = true;
+        }
+    }
+     // Método chamado quando a sentença é concluída
+    private void OnSentenceComplete()
+    {
+        // Verifica se o texto digitado é igual à sentença atual
+        if (speechText.text == sentences[index])
+        {
+            // Atualiza o animator
+            anim.SetInteger("transition", 0);
         }
     }
 }

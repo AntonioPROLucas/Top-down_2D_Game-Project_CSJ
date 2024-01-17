@@ -12,7 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d942ace5df1aa94586a1e8ab0377655, type: 3}
   m_Name: Marin
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 1460981097142565873, guid: e8473c0b50d8da741bbcf0a2f100d16f, type: 3}
   speakerSprite: {fileID: 0}
   sentence: 
-  dialogues: []
+  dialogues:
+  - actorName: 
+    profile: {fileID: 0}
+    sentence:
+      portuguese: oi
+      english: 
+      spanish: 
